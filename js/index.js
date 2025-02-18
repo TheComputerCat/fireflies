@@ -22,7 +22,8 @@ var NUM_FIREFLIES,
 	FLY_RADIUS,
 	FLY_PULL,
 	FLY_SYNC,
-	MOUSE_RADIUS;
+	MOUSE_RADIUS,
+    MOTION;
 
 var _resetConstants = function(){
 	var area = window.innerWidth * window.innerHeight;
@@ -37,6 +38,7 @@ var _resetConstants = function(){
 	FLY_PULL = 0.035;
 	FLY_SYNC = false;
 	MOUSE_RADIUS = 200;
+    MOTION=true;
 };
 
 _resetConstants();
@@ -195,18 +197,19 @@ function Firefly(){
 		//////////////////////
 
 		// Update position
-		self.x += self.speed * delta * Math.cos(self.angle);
-		self.y += self.speed * delta * Math.sin(self.angle);
-
-		// Loop around
-		if(self.x<-FLY_LOOP) self.x=app.renderer.width+FLY_LOOP;
-		if(self.x>app.renderer.width+FLY_LOOP) self.x=-FLY_LOOP;
-		if(self.y<-FLY_LOOP) self.y=app.renderer.height+FLY_LOOP;
-		if(self.y>app.renderer.height+FLY_LOOP) self.y=-FLY_LOOP;
-
-		// Swerve
-		self.angle += self.swerve;
-		if(Math.random()<0.05) self.swerve = (Math.random()-0.5)*FLY_SWERVE;
+        if(MOTION){
+            self.x += self.speed * delta * Math.cos(self.angle);
+            self.y += self.speed * delta * Math.sin(self.angle);
+            // Loop around
+            if(self.x<-FLY_LOOP) self.x=app.renderer.width+FLY_LOOP;
+            if(self.x>app.renderer.width+FLY_LOOP) self.x=-FLY_LOOP;
+            if(self.y<-FLY_LOOP) self.y=app.renderer.height+FLY_LOOP;
+            if(self.y>app.renderer.height+FLY_LOOP) self.y=-FLY_LOOP;
+    
+            // Swerve
+            self.angle += self.swerve;
+            if(Math.random()<0.05) self.swerve = (Math.random()-0.5)*FLY_SWERVE;
+        }
 
 		////////////////////////
 		// Cycling & Flashing //
@@ -322,6 +325,11 @@ subscribe("slider/numFireflies", function(value){
 	NUM_FIREFLIES = value;
 
 });
+
+subscribe("toggle/toggleMotion", function(value){
+	MOTION = !MOTION;
+});
+
 
 // Internal Clock
 
