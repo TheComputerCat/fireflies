@@ -132,6 +132,9 @@ function Firefly(){
 	self.x = Math.random()*app.renderer.width;
 	self.y = Math.random()*app.renderer.height;
 	self.angle = Math.random()*Math.TAU;
+    self.omega = 1;
+    self.theta = Math.random()*Math.TAU;
+    self.dtheta = 0;
 	self.speed = 0.5 + Math.random()*1;
 	self.swerve = (Math.random()-0.5)*FLY_SWERVE;
 
@@ -223,30 +226,32 @@ function Firefly(){
 		if(Mouse.pressed) _chaos=1;
 		if(_chaos>0.01 && closeEnough(self,Mouse,MOUSE_RADIUS)){
 			self.clock += Math.random()*0.15;
-		}
-		_chaos *= 0.8;
+        if(FLY_SYNC){
+            let mcos = 0, msin=0, n=0;
+            for(var i=0;i<fireflies.length;i++){
+                var ff = fireflies[i];
+                if(ff==self) continue; // is self? forget it
+                if(OBSERVE_ALL || closeEnough(self,ff,FLY_RADIUS)){ // is close enough?
+                    mcos += Math.cos(ff.theta)
+                    msin += Math.sin(ff.theta)
+                    n++;
+                }
+            }
+            if (n>0){
+                mcos = mcos/n
+                msin = msin/n
+                self.dtheta = FLY_CLOCK_SPEED*(self.omega + FLY_PULL*(Math.cos(self.theta)*msin - Math.sin(self.theta)*mcos))/60;
+                self.theta += self.dtheta;
+            }
+        }
 
-		// Flashed?
-		if(self.clock>1){
-
+        if(self.theta > Math.TAU){
 			// Flash!
 			flash.alpha = 1;
 			self.clock = 0;
-
-			// Bring nearby fireflies up.
-			if(FLY_SYNC){
-				for(var i=0;i<fireflies.length;i++){
-					var ff = fireflies[i];
-					if(ff==self) continue; // is self? forget it
-					if(closeEnough(self,ff,FLY_RADIUS)){ // is close enough?
-						var pull = (ff.clock/1); // to prevent double-pulling
-						ff.clock += pull*FLY_PULL;
-						if(ff.clock>1) ff.clock=1;
-					}
-				}
+            self.theta = self.theta - Math.TAU
 			}
 
-		}
 		body2.alpha = flash.alpha;
 		lightClock.alpha = flash.alpha;
 
