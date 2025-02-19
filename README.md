@@ -1,5 +1,11 @@
 ### [Fireflies](http://ncase.me/fireflies/)
 
+## Run with Docker!
+You can easily run this with:
+```bash
+docker run -it --rm -v .:/home/node/src -p 8000:8000 node:bookworm /bin/bash -c "su - node -c 'npm install http-server && npx http-server src'"
+```
+
 **IF YOU'D LIKE TO TRANSLATE "FIREFLIES":**
 
 1. *Fork* this repo.
