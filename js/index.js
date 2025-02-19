@@ -219,7 +219,10 @@ function Firefly(){
 		// If near mouse, get chaotic, and fast!
 		if(Mouse.pressed) _chaos=1;
 		if(_chaos>0.01 && closeEnough(self,Mouse,MOUSE_RADIUS)){
-			self.clock += Math.random()*0.15;
+			self.theta += Math.random()*Math.PI;
+		}
+		_chaos *= 0.8;
+
         if(FLY_SYNC){
             let mcos = 0, msin=0, n=0;
             for(var i=0;i<fireflies.length;i++){
