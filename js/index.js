@@ -23,7 +23,8 @@ var NUM_FIREFLIES,
 	FLY_PULL,
 	FLY_SYNC,
 	MOUSE_RADIUS,
-    MOTION;
+    MOTION,
+    OBSERVE_ALL;
 
 var _resetConstants = function(){
 	var area = window.innerWidth * window.innerHeight;
@@ -39,6 +40,7 @@ var _resetConstants = function(){
 	FLY_SYNC = false;
 	MOUSE_RADIUS = 200;
     MOTION=true;
+    OBSERVE_ALL=false;
 };
 
 _resetConstants();
@@ -335,6 +337,9 @@ subscribe("toggle/toggleMotion", function(value){
 	MOTION = !MOTION;
 });
 
+subscribe("toggle/observeAllNeighbors", function(value){
+	OBSERVE_ALL = !OBSERVE_ALL;
+});
 
 // Internal Clock
 
