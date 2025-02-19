@@ -80,14 +80,6 @@ window.onload = function(){
 
 	});
 
-	// Play bg music whenever
-	var bg_loop = new Howl({
-		src: "sounds/forest.mp3",
-		volume: 0.8,
-		loop: true
-	});
-	bg_loop.play();
-
 	// Set up widgets!
 	Widgets.convert($("#words"));
 
