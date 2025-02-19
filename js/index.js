@@ -52,8 +52,13 @@ THE MAIN GAME CODE
 *******************************/
 
 var app;
+var canvasCircles;
 var fireflies = [];
-window.onload = function(){
+let circles = []
+window.onload = async function(){
+
+    canvasCircles = new PIXI.Application(500,500,{backgroundColor:0xFFFFFF});
+    $("#graph").appendChild(canvasCircles.view);
 
 	// Create app!
 	app = new PIXI.Application(document.body.clientWidth, document.body.clientHeight, {backgroundColor:0x000000});
@@ -67,6 +72,7 @@ window.onload = function(){
 
 		// Add fireflies!
 		_addFireflies(NUM_FIREFLIES);
+        addCircles();
 
 		// Animation loop
 		app.ticker.add(function(delta){
@@ -74,6 +80,14 @@ window.onload = function(){
 				fireflies[i].update(delta);
 			}
 		});
+
+        canvasCircles.ticker.add(function(delta){
+            for(var i=0; i< circles.length; i++){
+                let coordinates = polarToCartesian(150, fireflies[circles[i].id].theta);
+                circles[i].circle.x = coordinates.x;
+                circles[i].circle.y = coordinates.y;
+            }
+        })
 
 		// Synchronize 'em!
 		_syncConstants();
@@ -85,19 +99,63 @@ window.onload = function(){
 
 };
 
+function polarToCartesian(r, theta) {
+    return {
+        x: r * Math.cos(theta),
+        y: r * Math.sin(theta)
+    };
+}
+
+function numberToColor(num) {
+    num = Math.max(0, Math.min(num, NUM_FIREFLIES));
+    const normalized = num / NUM_FIREFLIES;
+
+    const red = Math.round(255 * Math.abs(Math.cos(normalized * Math.PI * 2)));
+    const green = Math.round(255 * Math.abs(Math.sin(normalized * Math.PI * 2)));
+    const blue = Math.round(255 * Math.abs(Math.cos((normalized + 0.5) * Math.PI * 2)));
+
+    const color = (red << 16) | (green << 8) | blue;
+
+    return `0x${color.toString(16).padStart(6, '0')}`;
+}
+
+function addCircles(){
+    for(var i=0; i<fireflies.length; i++){
+        if(Math.random()<0.1){
+            const circle = new PIXI.Graphics();
+            circle.beginFill(numberToColor(i));
+            circle.drawCircle(250, 250, 10);
+            circle.endFill();
+            circles.push({circle:circle, id: i});
+            canvasCircles.stage.addChild(circle);
+        }
+    }
+}
+
+function removeCircles(canvasCircles){
+    for (let i = 0; i < circles.length; i++) {
+        canvasCircles.stage.removeChild(circles[i].circle);
+    }
+    circles=[];
+}
+
 var _addFireflies = function(num){
-	for(var i=0; i<num; i++){
+    removeCircles(canvasCircles);
+    for(var i=0; i<num; i++){
 		var ff = new Firefly();
 		fireflies.push(ff);
 		app.stage.addChild(ff.graphics);
 	}
+    addCircles();
 };
 
 var _removeFireflies = function(num){
+    removeCircles(canvasCircles);
 	for(var i=0; i<num; i++){
 		var ff = fireflies.pop();
 		app.stage.removeChild(ff.graphics);
 	}
+    addCircles();
 };
 
 var _resetFireflies = function(){
@@ -247,7 +305,7 @@ function Firefly(){
 			flash.alpha = 1;
 			self.clock = 0;
             self.theta = self.theta - Math.TAU
-			}
+		}
 
 		body2.alpha = flash.alpha;
 		lightClock.alpha = flash.alpha;
