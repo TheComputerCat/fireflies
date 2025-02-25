@@ -57,7 +57,7 @@ var fireflies = [];
 let circles = []
 window.onload = async function(){
 
-    canvasCircles = new PIXI.Application(500,500,{backgroundColor:0xFFFFFF});
+    canvasCircles = new PIXI.Application(350,350,{backgroundColor:0xFFFFFF});
     $("#graph").appendChild(canvasCircles.view);
 
 	// Create app!
@@ -124,7 +124,7 @@ function addCircles(){
         if(fireflies.length < 25 || Math.random()<0.1){
             const circle = new PIXI.Graphics();
             circle.beginFill(numberToColor(i));
-            circle.drawCircle(250, 250, 10);
+            circle.drawCircle(175, 175, 10);
             circle.endFill();
             circles.push({circle:circle, id: i});
             canvasCircles.stage.addChild(circle);
