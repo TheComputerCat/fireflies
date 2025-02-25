@@ -24,7 +24,10 @@ var NUM_FIREFLIES,
 	FLY_SYNC,
 	MOUSE_RADIUS,
     MOTION,
-    OBSERVE_ALL;
+    OBSERVE_ALL,
+    AVG_X,
+    AVG_Y,
+    AVG_THETA;
 
 var _resetConstants = function(){
 	var area = window.innerWidth * window.innerHeight;
@@ -41,6 +44,9 @@ var _resetConstants = function(){
 	MOUSE_RADIUS = 200;
     MOTION=true;
     OBSERVE_ALL=false;
+    AVG_X = 0;
+    AVG_Y = 0;
+    AVG_THETA = 0;
 };
 
 _resetConstants();
@@ -55,6 +61,7 @@ var app;
 var canvasCircles;
 var fireflies = [];
 let circles = []
+let avg_circle;
 window.onload = async function(){
 
     canvasCircles = new PIXI.Application(350,350,{backgroundColor:0xFFFFFF});
@@ -73,17 +80,35 @@ window.onload = async function(){
 		// Add fireflies!
 		_addFireflies(NUM_FIREFLIES);
         addCircles();
+        const circle = new PIXI.Graphics();
+        circle.beginFill('0x000000');
+        circle.drawCircle(175, 175, 10);
+        circle.endFill();
+        avg_circle = circle;
+        canvasCircles.stage.addChild(circle);
 
 		// Animation loop
 		app.ticker.add(function(delta){
+            AVG_X = 0;
+            AVG_Y = 0;
 			for(var i=0; i<fireflies.length; i++){
 				fireflies[i].update(delta);
+                AVG_X += Math.cos(fireflies[i].theta);
+                AVG_Y += Math.sin(fireflies[i].theta);
 			}
+            AVG_X = AVG_X/fireflies.length;
+            AVG_Y = AVG_Y/fireflies.length;
+            AVG_THETA = Math.atan2(AVG_Y, AVG_X)
+            AVG_THETA = AVG_THETA < 0 ? AVG_THETA + 2 * Math.PI : AVG_THETA
 		});
 
         canvasCircles.ticker.add(function(delta){
+            let coordinates = polarToCartesian(120*Math.sqrt(AVG_X ** 2 + AVG_Y ** 2), AVG_THETA);
+            avg_circle.x = coordinates.x;
+            avg_circle.y = coordinates.y;
+
             for(var i=0; i< circles.length; i++){
-                let coordinates = polarToCartesian(150, fireflies[circles[i].id].theta);
+                coordinates = polarToCartesian(150, fireflies[circles[i].id].theta);
                 circles[i].circle.x = coordinates.x;
                 circles[i].circle.y = coordinates.y;
             }
