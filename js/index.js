@@ -198,7 +198,7 @@ var _removeFireflies = function(num){
 var _resetFireflies = function(){
 	for(var i=0; i<fireflies.length; i++){
 		var ff = fireflies[i];
-		ff.clock = Math.random();
+		ff.theta = Math.random()*Math.PI;
 	}	
 };
 
@@ -390,13 +390,14 @@ WIDGET CODE: Modifying "Constants"
 
 // Synchronize with the UI
 var _syncConstants = function(){
-
+    publish("slider/toggleMotion", [MOTION]);
 	publish("slider/numFireflies", [NUM_FIREFLIES]);
 
 	publish("toggle/showClocks", [SHOW_CLOCKS]);
 	publish("slider/clockSpeed", [FLY_CLOCK_SPEED]);
 
 	publish("toggle/neighborNudgeRule", [FLY_SYNC]);
+    publish("toggle/observeAllNeighbors", [OBSERVE_ALL])
 	publish("slider/nudgeAmount", [FLY_PULL]);
 	publish("slider/neighborRadius", [FLY_RADIUS]);
 
