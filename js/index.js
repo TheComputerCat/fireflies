@@ -321,7 +321,7 @@ function Firefly(){
 		// Clocks!
 		clock.rotation = -g.rotation;
 		clock.visible = SHOW_CLOCKS;
-		darkClockHand.rotation = lightClockHand.rotation = self.theta + Math.PI/2;
+		darkClockHand.rotation = lightClockHand.rotation = -(self.theta - Math.PI/2);
 
 	};
 	self.update(0);
