@@ -298,6 +298,9 @@ function Firefly(){
                 self.dtheta = FLY_CLOCK_SPEED*(self.omega + FLY_PULL*(Math.cos(self.theta)*msin - Math.sin(self.theta)*mcos))/60;
                 self.theta += self.dtheta;
             }
+        } else {
+            self.dtheta = FLY_CLOCK_SPEED*(self.omega)/60;
+            self.theta += self.dtheta;
         }
 
         if(self.theta > Math.TAU){
