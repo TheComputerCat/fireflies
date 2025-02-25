@@ -190,9 +190,6 @@ function Firefly(){
 	self.speed = 0.5 + Math.random()*1;
 	self.swerve = (Math.random()-0.5)*FLY_SWERVE;
 
-	// Clock! From 0 to 1
-	self.clock = Math.random();
-
 	// Flash
 	var flash = _makeMovieClip("firefly", {anchorX:0.5, anchorY:0.5});
 	flash.gotoAndStop(2);
@@ -272,7 +269,6 @@ function Firefly(){
 
 		// Increment cycle
 		flash.alpha *= 0.9;
-		self.clock += (delta/60)*FLY_CLOCK_SPEED;
 
 		// If near mouse, get chaotic, and fast!
 		if(Mouse.pressed) _chaos=1;
@@ -304,7 +300,6 @@ function Firefly(){
         if(self.theta > Math.TAU){
 			// Flash!
 			flash.alpha = 1;
-			self.clock = 0;
             self.theta = self.theta - Math.TAU
 		}
 
