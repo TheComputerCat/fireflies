@@ -121,7 +121,7 @@ function numberToColor(num) {
 
 function addCircles(){
     for(var i=0; i<fireflies.length; i++){
-        if(Math.random()<0.1){
+        if(fireflies.length < 25 || Math.random()<0.1){
             const circle = new PIXI.Graphics();
             circle.beginFill(numberToColor(i));
             circle.drawCircle(250, 250, 10);
