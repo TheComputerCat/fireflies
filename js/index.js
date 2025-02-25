@@ -102,7 +102,7 @@ window.onload = async function(){
 function polarToCartesian(r, theta) {
     return {
         x: r * Math.cos(theta),
-        y: r * Math.sin(theta)
+        y: - r * Math.sin(theta)
     };
 }
 
