@@ -125,9 +125,10 @@ Widgets.slider = function(config){
 	self.dom = dom;
 
 	// Top Label
+    var top_label_text = config.label;
 	var top_label = document.createElement("div");
 	top_label.id = "top_label";
-	top_label.innerHTML = config.label;
+	top_label.innerHTML = top_label_text;
 	dom.appendChild(top_label);
 
 	// Slider
@@ -248,6 +249,8 @@ Widgets.slider = function(config){
 
 		// Publish value
 		publish("slider/"+config.id, [x]);
+        console.log(x)
+        top_label.innerHTML = `${top_label_text} ${Number(x.toFixed(3))}`;
 
 	};
 	self.value = 0;
@@ -261,7 +264,8 @@ Widgets.slider = function(config){
 		var x = (value-min)/(max-min); // 0 to 1
 		var left = x*sliderWidth;
 		slider_knob.style.left = left;
-
+        console.log(value)
+        top_label.innerHTML = `${top_label_text} ${Number(value.toFixed(3))}`;
 	};
 	subscribe("slider/"+config.id, self.onChangeValue);
 
