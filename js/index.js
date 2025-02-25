@@ -80,38 +80,15 @@ window.onload = async function(){
 		// Add fireflies!
 		_addFireflies(NUM_FIREFLIES);
         addCircles();
-        const circle = new PIXI.Graphics();
-        circle.beginFill('0x000000');
-        circle.drawCircle(175, 175, 10);
-        circle.endFill();
-        avg_circle = circle;
-        canvasCircles.stage.addChild(circle);
+        addAvgCircle();
 
 		// Animation loop
 		app.ticker.add(function(delta){
-            AVG_X = 0;
-            AVG_Y = 0;
-			for(var i=0; i<fireflies.length; i++){
-				fireflies[i].update(delta);
-                AVG_X += Math.cos(fireflies[i].theta);
-                AVG_Y += Math.sin(fireflies[i].theta);
-			}
-            AVG_X = AVG_X/fireflies.length;
-            AVG_Y = AVG_Y/fireflies.length;
-            AVG_THETA = Math.atan2(AVG_Y, AVG_X)
-            AVG_THETA = AVG_THETA < 0 ? AVG_THETA + 2 * Math.PI : AVG_THETA
+           updateFlies(delta);
 		});
 
         canvasCircles.ticker.add(function(delta){
-            let coordinates = polarToCartesian(120*Math.sqrt(AVG_X ** 2 + AVG_Y ** 2), AVG_THETA);
-            avg_circle.x = coordinates.x;
-            avg_circle.y = coordinates.y;
-
-            for(var i=0; i< circles.length; i++){
-                coordinates = polarToCartesian(150, fireflies[circles[i].id].theta);
-                circles[i].circle.x = coordinates.x;
-                circles[i].circle.y = coordinates.y;
-            }
+            updateCircles();
         })
 
 		// Synchronize 'em!
@@ -154,6 +131,41 @@ function addCircles(){
             circles.push({circle:circle, id: i});
             canvasCircles.stage.addChild(circle);
         }
+    }
+}
+
+function addAvgCircle() {
+    const circle = new PIXI.Graphics();
+    circle.beginFill('0x000000');
+    circle.drawCircle(175, 175, 10);
+    circle.endFill();
+    avg_circle = circle;
+    canvasCircles.stage.addChild(circle);
+}
+
+function updateFlies(delta){
+    AVG_X = 0;
+    AVG_Y = 0;
+    for(var i=0; i<fireflies.length; i++){
+        fireflies[i].update(delta);
+        AVG_X += Math.cos(fireflies[i].theta);
+        AVG_Y += Math.sin(fireflies[i].theta);
+    }
+    AVG_X = AVG_X/fireflies.length;
+    AVG_Y = AVG_Y/fireflies.length;
+    AVG_THETA = Math.atan2(AVG_Y, AVG_X)
+    AVG_THETA = AVG_THETA < 0 ? AVG_THETA + 2 * Math.PI : AVG_THETA
+}
+
+function updateCircles() {
+    let coordinates = polarToCartesian(120*Math.sqrt(AVG_X ** 2 + AVG_Y ** 2), AVG_THETA);
+    avg_circle.x = coordinates.x;
+    avg_circle.y = coordinates.y;
+
+    for(var i=0; i< circles.length; i++){
+        coordinates = polarToCartesian(150, fireflies[circles[i].id].theta);
+        circles[i].circle.x = coordinates.x;
+        circles[i].circle.y = coordinates.y;
     }
 }
 
