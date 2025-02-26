@@ -1,4 +1,7 @@
-### [Fireflies](http://ncase.me/fireflies/)
+# [Fireflies](http://ncase.me/fireflies/)
+
+## See the code in action!
+Visit [https://thecomputercat.github.io/fireflies/](https://thecomputercat.github.io/fireflies/)
 
 ## Run with Docker!
 You can easily run this with:
