@@ -72,8 +72,8 @@ window.onload = async function(){
     $("#graph").appendChild(canvasCircles.view);
     radius_avg_circle = new PIXI.Graphics();
     axes = new PIXI.Graphics();
-    canvasCircles.stage.addChild(radius_avg_circle);
     canvasCircles.stage.addChild(axes);
+    canvasCircles.stage.addChild(radius_avg_circle);
 
 	// Create app!
 	app = new PIXI.Application(document.body.clientWidth, document.body.clientHeight, {backgroundColor:0x000000});
