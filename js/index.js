@@ -62,10 +62,16 @@ var canvasCircles;
 var fireflies = [];
 let circles = []
 let avg_circle;
+let radius_avg_circle;
+let axes;
 window.onload = async function(){
 
     canvasCircles = new PIXI.Application(350,350,{backgroundColor:0xFFFFFF});
     $("#graph").appendChild(canvasCircles.view);
+    radius_avg_circle = new PIXI.Graphics();
+    axes = new PIXI.Graphics();
+    canvasCircles.stage.addChild(radius_avg_circle);
+    canvasCircles.stage.addChild(axes);
 
 	// Create app!
 	app = new PIXI.Application(document.body.clientWidth, document.body.clientHeight, {backgroundColor:0x000000});
@@ -79,9 +85,9 @@ window.onload = async function(){
 
 		// Add fireflies!
 		_addFireflies(NUM_FIREFLIES);
+        drawAxes()
         addCircles();
         addAvgCircle();
-
 		// Animation loop
 		app.ticker.add(function(delta){
            updateFlies(delta);
@@ -158,9 +164,13 @@ function updateFlies(delta){
 }
 
 function updateCircles() {
-    let coordinates = polarToCartesian(120*Math.sqrt(AVG_X ** 2 + AVG_Y ** 2), AVG_THETA);
+    let coordinates = polarToCartesian(150*Math.sqrt(AVG_X ** 2 + AVG_Y ** 2), AVG_THETA);
     avg_circle.x = coordinates.x;
     avg_circle.y = coordinates.y;
+    radius_avg_circle.clear();
+    radius_avg_circle.lineStyle(5, 0xff0000, 1)
+    radius_avg_circle.moveTo(175, 175);
+    radius_avg_circle.lineTo(175 + coordinates.x, 175 + coordinates.y);
 
     for(var i=0; i< circles.length; i++){
         coordinates = polarToCartesian(150, fireflies[circles[i].id].theta);
@@ -201,6 +211,15 @@ var _resetFireflies = function(){
 		ff.theta = Math.random()*Math.PI;
 	}	
 };
+
+function drawAxes() {
+    const center = canvasCircles.screen.width / 2;
+    axes.lineStyle(2, 0xCCCCCC, 1);
+    axes.moveTo(0, center);
+    axes.lineTo(canvasCircles.screen.width, center);
+    axes.moveTo(center, 0);
+    axes.lineTo(center, canvasCircles.screen.height);
+}
 
 /******************************
 
