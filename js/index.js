@@ -27,7 +27,9 @@ var NUM_FIREFLIES,
     OBSERVE_ALL,
     AVG_X,
     AVG_Y,
-    AVG_THETA;
+    AVG_THETA,
+    CANVAS_CIRCLES_SIZE = 350,
+    MID_CNV_SZ = CANVAS_CIRCLES_SIZE/2;
 
 var _resetConstants = function(){
 	var area = window.innerWidth * window.innerHeight;
@@ -66,7 +68,7 @@ let radius_avg_circle;
 let axes;
 window.onload = async function(){
 
-    canvasCircles = new PIXI.Application(350,350,{backgroundColor:0xFFFFFF});
+    canvasCircles = new PIXI.Application(CANVAS_CIRCLES_SIZE, CANVAS_CIRCLES_SIZE, {backgroundColor:0xFFFFFF});
     $("#graph").appendChild(canvasCircles.view);
     radius_avg_circle = new PIXI.Graphics();
     axes = new PIXI.Graphics();
@@ -132,7 +134,7 @@ function addCircles(){
         if(fireflies.length < 25 || Math.random()<0.1){
             const circle = new PIXI.Graphics();
             circle.beginFill(numberToColor(i));
-            circle.drawCircle(175, 175, 10);
+            circle.drawCircle(MID_CNV_SZ, MID_CNV_SZ, 10);
             circle.endFill();
             circles.push({circle:circle, id: i});
             canvasCircles.stage.addChild(circle);
@@ -143,7 +145,7 @@ function addCircles(){
 function addAvgCircle() {
     const circle = new PIXI.Graphics();
     circle.beginFill('0x000000');
-    circle.drawCircle(175, 175, 10);
+    circle.drawCircle(MID_CNV_SZ, MID_CNV_SZ, 10);
     circle.endFill();
     avg_circle = circle;
     canvasCircles.stage.addChild(circle);
@@ -169,8 +171,8 @@ function updateCircles() {
     avg_circle.y = coordinates.y;
     radius_avg_circle.clear();
     radius_avg_circle.lineStyle(5, 0xff0000, 1)
-    radius_avg_circle.moveTo(175, 175);
-    radius_avg_circle.lineTo(175 + coordinates.x, 175 + coordinates.y);
+    radius_avg_circle.moveTo(MID_CNV_SZ, MID_CNV_SZ);
+    radius_avg_circle.lineTo(MID_CNV_SZ + coordinates.x, MID_CNV_SZ + coordinates.y);
 
     for(var i=0; i< circles.length; i++){
         coordinates = polarToCartesian(150, fireflies[circles[i].id].theta);
