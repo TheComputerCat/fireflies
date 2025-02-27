@@ -210,7 +210,7 @@ var _removeFireflies = function(num){
 var _resetFireflies = function(){
 	for(var i=0; i<fireflies.length; i++){
 		var ff = fireflies[i];
-		ff.theta = Math.random()*Math.PI;
+		ff.theta = Math.random()*Math.TAU;
 	}	
 };
 
