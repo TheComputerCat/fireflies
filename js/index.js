@@ -170,7 +170,7 @@ function updateCircles() {
     avg_circle.x = coordinates.x;
     avg_circle.y = coordinates.y;
     radius_avg_circle.clear();
-    radius_avg_circle.lineStyle(5, 0xff0000, 1)
+    radius_avg_circle.lineStyle(3, 0xff0000, 1)
     radius_avg_circle.moveTo(MID_CNV_SZ, MID_CNV_SZ);
     radius_avg_circle.lineTo(MID_CNV_SZ + coordinates.x, MID_CNV_SZ + coordinates.y);
 
