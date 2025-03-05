@@ -23,7 +23,7 @@ var NUM_FIREFLIES,
 	FLY_PULL,
 	FLY_SYNC,
 	MOUSE_RADIUS,
-    MOTION,
+    FIXED,
     OBSERVE_ALL,
     AVG_X,
     AVG_Y,
@@ -44,7 +44,7 @@ var _resetConstants = function(){
 	FLY_PULL = 0.3;
 	FLY_SYNC = false;
 	MOUSE_RADIUS = 200;
-    MOTION=true;
+    FIXED=false;
     OBSERVE_ALL=false;
     AVG_X = 0;
     AVG_Y = 0;
@@ -307,7 +307,7 @@ function Firefly(){
 		//////////////////////
 
 		// Update position
-        if(MOTION){
+        if(!FIXED){
             self.x += self.speed * delta * Math.cos(self.angle);
             self.y += self.speed * delta * Math.sin(self.angle);
             // Loop around
@@ -411,7 +411,7 @@ WIDGET CODE: Modifying "Constants"
 
 // Synchronize with the UI
 var _syncConstants = function(){
-    publish("slider/toggleMotion", [MOTION]);
+    publish("toggle/toggleMotion", [FIXED]);
 	publish("slider/numFireflies", [NUM_FIREFLIES]);
 
 	publish("toggle/showClocks", [SHOW_CLOCKS]);
@@ -442,11 +442,11 @@ subscribe("slider/numFireflies", function(value){
 });
 
 subscribe("toggle/toggleMotion", function(value){
-	MOTION = !MOTION;
+	FIXED = value;
 });
 
 subscribe("toggle/observeAllNeighbors", function(value){
-	OBSERVE_ALL = !OBSERVE_ALL;
+	OBSERVE_ALL = value;
 });
 
 // Internal Clock
