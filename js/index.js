@@ -242,7 +242,7 @@ function Firefly(){
 	self.x = Math.random()*app.renderer.width;
 	self.y = Math.random()*app.renderer.height;
 	self.angle = Math.random()*Math.TAU;
-    self.omega = 1;
+    self.omega = Math.random();
     self.theta = Math.random()*Math.TAU;
     self.dtheta = 0;
 	self.speed = 0.5 + Math.random()*1;
