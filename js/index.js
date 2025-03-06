@@ -548,7 +548,6 @@ subscribe("slider/neighborRadius", function(value){
 });
 
 subscribe("toggle/toggleRecord", function(value){
-    console.log(value)
     if (value) {
         resetSimulation();
     }
