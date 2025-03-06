@@ -1,4 +1,4 @@
-# [Fireflies](http://ncase.me/fireflies/)
+# Fireflies
 
 ## See the code in action!
 Visit [https://thecomputercat.github.io/fireflies/](https://thecomputercat.github.io/fireflies/)
