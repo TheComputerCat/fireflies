@@ -445,8 +445,6 @@ function dumpSimulation(autoToggle){
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-
-    stopRecording();
 }
 
 /******************************
