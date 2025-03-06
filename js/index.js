@@ -170,6 +170,7 @@ function updateFlies(delta){
 
 function recordData() {
     simulation.ticks += 1;
+    document.getElementById("numTicks").innerText = simulation.ticks;
     for(var i=0; i<fireflies.length; i++){
         simulation.data[i].push(fireflies[i].theta);
     }
@@ -221,6 +222,7 @@ function resetSimulation() {
         ticks: 0,
         data: Array.from({ length: fireflies.length }, () => [])
     };
+    document.getElementById("numTicks").innerText = simulation.ticks;
 }
 
 function updateCircle(firefly, circle) {
@@ -548,8 +550,12 @@ subscribe("slider/neighborRadius", function(value){
 });
 
 subscribe("toggle/toggleRecord", function(value){
+    const element = document.getElementById("ticks");
     if (value) {
         resetSimulation();
+        element.style.display = "block";
+    } else {
+        element.style.display = "none";
     }
     RECORD = value;
 });
