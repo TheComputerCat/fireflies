@@ -26,6 +26,7 @@ var NUM_FIREFLIES,
     FIXED,
     RANDOM_OMEGA,
     OBSERVE_ALL,
+    COLOR,
     AVG_X,
     AVG_Y,
     AVG_THETA,
@@ -50,6 +51,7 @@ var _resetConstants = function () {
     FIXED = false;
     RANDOM_OMEGA = false,
     OBSERVE_ALL = false;
+    COLOR = true,
     AVG_X = 0;
     AVG_Y = 0;
     AVG_THETA = 0;
@@ -119,30 +121,19 @@ function polarToCartesian(r, theta) {
     };
 }
 
-function numberToColor(num) {
-    num = Math.max(0, Math.min(num, NUM_FIREFLIES));
-    const normalized = num / NUM_FIREFLIES;
+const rgb2Hex = (str) => str.match(/[0-9]+/g).reduce((a, b) => a + (b | 256).toString(16).slice(1), '0x');
 
-    const red = Math.round(255 * Math.abs(Math.cos(normalized * Math.PI * 2)));
-    const green = Math.round(255 * Math.abs(Math.sin(normalized * Math.PI * 2)));
-    const blue = Math.round(255 * Math.abs(Math.cos((normalized + 0.5) * Math.PI * 2)));
+const linearColor = d3.scaleLinear().range([0, 0.9]).domain([0, 1]);
 
-    const color = (red << 16) | (green << 8) | blue;
-
-    return `0x${color.toString(16).padStart(6, '0')}`;
+function colorWith(colorer, num) {
+    return rgb2Hex(colorer(linearColor(num)));
 }
 
-function addCircles(){
-    for(var i=0; i<fireflies.length; i++){
-        if(fireflies.length < 25 || Math.random()<0.1){
-            const circle = new PIXI.Graphics();
-            circle.beginFill(numberToColor(i));
-            circle.drawCircle(MID_CNV_SZ, MID_CNV_SZ, 10);
-            circle.endFill();
-            circles.push({circle:circle, id: i});
-            canvasCircles.stage.addChild(circle);
-        }
+function numberToColor(num) {
+    if (COLOR) {
+        return colorWith(d3.interpolateSpectral, num);
     }
+    return colorWith(d3.interpolateGreys, num);
 }
 
 function addAvgCircle() {
@@ -231,6 +222,7 @@ var _resetFireflies = function(){
 	for(var i=0; i<fireflies.length; i++){
 		var ff = fireflies[i];
 		ff.theta = Math.random()*Math.TAU;
+        ff.omega = Math.random();
 	}	
 };
 
@@ -444,6 +436,7 @@ var _syncConstants = function(){
 	publish("toggle/neighborNudgeRule", [FLY_SYNC]);
     publish("toggle/observeAllNeighbors", [OBSERVE_ALL])
 	publish("slider/nudgeAmount", [FLY_PULL]);
+    publish("toggle/toggleColor", [COLOR]);
     publish("slider/toggleRandomOmega", [RANDOM_OMEGA]);
 	publish("slider/neighborRadius", [FLY_RADIUS]);
 
@@ -473,6 +466,16 @@ subscribe("toggle/toggleMotion", function(value){
 subscribe("toggle/observeAllNeighbors", function(value){
 	OBSERVE_ALL = value;
 });
+
+subscribe("toggle/toggleColor", function (value) {
+    COLOR = value;
+    for (let i = 0; i < circles.length; i++) {
+        const circle = circles[i].circle;
+        circle.clear();
+        updateCircle(fireflies[circles[i].id], circle)
+    }
+});
+
 subscribe("toggle/toggleRandomOmega", function (value) {
     RANDOM_OMEGA = value;
 });

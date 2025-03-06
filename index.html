@@ -53,6 +53,15 @@
 
 <hr/>
     <widget type="toggle"
+    id="toggleColor"
+    background="#000" color="#fff"
+    background-on="#FEE27F" color-on="#000"
+
+    label="Color:"
+    label-on="ON" label-off="OFF">
+    </widget>
+
+    <widget type="toggle"
     id="toggleRandomOmega"
     background="#000" color="#fff"
     background-on="#FEE27F" color-on="#000"
@@ -399,6 +408,7 @@ they shall collect themselves again, and flash as one.
 </html>
 
 <!-- Library code -->
+<script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
 <script src="js/pixi.min.js"></script>
 <script src="js/howler.js"></script>
 <script src="js/minpubsub.src.js"></script>
