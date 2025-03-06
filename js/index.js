@@ -27,6 +27,7 @@ var NUM_FIREFLIES,
     RANDOM_OMEGA,
     OBSERVE_ALL,
     COLOR,
+    RECORD,
     AVG_X,
     AVG_Y,
     AVG_THETA,
@@ -52,6 +53,7 @@ var _resetConstants = function () {
     RANDOM_OMEGA = false;
     OBSERVE_ALL = false;
     COLOR = true;
+    RECORD = false;
     AVG_X = 0;
     AVG_Y = 0;
     AVG_THETA = 0;
@@ -72,6 +74,10 @@ let circles = []
 let avg_circle;
 let radius_avg_circle;
 let axes;
+let simulation = {
+    ticks: 0,
+    data: []
+};
 window.onload = async function(){
 
     canvasCircles = new PIXI.Application(CANVAS_CIRCLES_SIZE, CANVAS_CIRCLES_SIZE, {backgroundColor:0xFFFFFF});
@@ -157,6 +163,16 @@ function updateFlies(delta){
     AVG_Y = AVG_Y/fireflies.length;
     AVG_THETA = Math.atan2(AVG_Y, AVG_X)
     AVG_THETA = AVG_THETA < 0 ? AVG_THETA + 2 * Math.PI : AVG_THETA
+    if(RECORD){
+        recordData();
+    }
+}
+
+function recordData() {
+    simulation.ticks += 1;
+    for(var i=0; i<fireflies.length; i++){
+        simulation.data[i].push(fireflies[i].theta);
+    }
 }
 
 function updateCircles() {
@@ -186,11 +202,12 @@ function removeCircles(j) {
 }
 
 var _addFireflies = function(num){
+    stopRecording();
     for(var i=0; i<num; i++){
-		var ff = new Firefly();
+        var ff = new Firefly();
 		fireflies.push(ff);
 		app.stage.addChild(ff.graphics);
-
+        
         if (fireflies.length < 25 || Math.random() < 0.1) {
             const circle = new PIXI.Graphics();
             updateCircle(ff, circle);
@@ -199,6 +216,19 @@ var _addFireflies = function(num){
         }
     }
 };
+
+function stopRecording() {
+    RECORD = false;
+    publish("toggle/toggleRecord", [RECORD]);
+    resetSimulation();
+}
+
+function resetSimulation() {
+    simulation = {
+        ticks: 0,
+        data: Array.from({ length: fireflies.length }, () => [])
+    };
+}
 
 function updateCircle(firefly, circle) {
     circle.beginFill(numberToColor(firefly.omega));
@@ -211,6 +241,7 @@ function updateCircle(firefly, circle) {
 }
 
 var _removeFireflies = function (num) {
+    stopRecording();
     for (var i = 0; i < num; i++) {
         removeCircles(fireflies.length - 1);
 		var ff = fireflies.pop();
@@ -402,6 +433,22 @@ function Firefly(){
 
 }
 
+function dumpSimulation(autoToggle){
+    const jsonStr = JSON.stringify(simulation, null, 2);
+    const blob = new Blob([jsonStr], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "simulation.json";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    stopRecording();
+}
+
 /******************************
 
 UI CODE: Resize, make widgets, etc...
@@ -439,6 +486,7 @@ var _syncConstants = function(){
     publish("toggle/toggleColor", [COLOR]);
     publish("toggle/toggleRandomOmega", [RANDOM_OMEGA]);
 	publish("slider/neighborRadius", [FLY_RADIUS]);
+    publish("toggle/toggleRecord", [RECORD]);
 
 };
 
@@ -508,6 +556,14 @@ subscribe("slider/neighborRadius", function(value){
 	FLY_RADIUS = value;
 });
 
+subscribe("toggle/toggleRecord", function(value){
+    console.log(value)
+    if (value) {
+        resetSimulation();
+    }
+    RECORD = value;
+});
+
 // Reset Everything
 
 subscribe("button/resetFireflies", function(){
@@ -518,4 +574,8 @@ subscribe("button/resetEverything", function(){
 	_resetConstants();
 	_syncConstants();
 	_resetFireflies();
+});
+
+subscribe("button/dumpSimulation", function(){
+	dumpSimulation();
 });
