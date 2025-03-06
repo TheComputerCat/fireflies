@@ -502,10 +502,12 @@ subscribe("slider/numFireflies", function(value){
 
 subscribe("toggle/toggleMotion", function(value){
 	FIXED = value;
+    resetSimulation();
 });
 
 subscribe("toggle/observeAllNeighbors", function(value){
 	OBSERVE_ALL = value;
+    resetSimulation();
 });
 
 subscribe("toggle/toggleColor", function (value) {
@@ -519,6 +521,7 @@ subscribe("toggle/toggleColor", function (value) {
 
 subscribe("toggle/toggleRandomOmega", function (value) {
     RANDOM_OMEGA = value;
+    resetSimulation();
 });
 
 // Internal Clock
@@ -527,7 +530,8 @@ subscribe("toggle/showClocks", function(value){
 	SHOW_CLOCKS = value;
 });
 subscribe("slider/clockSpeed", function(value){
-	FLY_CLOCK_SPEED = value
+	FLY_CLOCK_SPEED = value;
+    resetSimulation();
 });
 
 // Neighbor Nudge Rule
@@ -541,12 +545,15 @@ subscribe("toggle/neighborNudgeRule", function(value){
 		$("#nudgeAmount").setAttribute("inactive","yes");
 		$("#neighborRadius").setAttribute("inactive","yes");
 	}
+    resetSimulation();
 });
 subscribe("slider/nudgeAmount", function(value){
 	FLY_PULL = value;
+    resetSimulation();
 });
 subscribe("slider/neighborRadius", function(value){
 	FLY_RADIUS = value;
+    resetSimulation();
 });
 
 subscribe("toggle/toggleRecord", function(value){
@@ -564,12 +571,14 @@ subscribe("toggle/toggleRecord", function(value){
 
 subscribe("button/resetFireflies", function(){
 	_resetFireflies();
+    resetSimulation();
 });
 
 subscribe("button/resetEverything", function(){
 	_resetConstants();
 	_syncConstants();
 	_resetFireflies();
+    resetSimulation();
 });
 
 subscribe("button/dumpSimulation", function(){
