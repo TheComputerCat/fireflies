@@ -24,6 +24,7 @@ var NUM_FIREFLIES,
 	FLY_SYNC,
 	MOUSE_RADIUS,
     FIXED,
+    RANDOM_OMEGA,
     OBSERVE_ALL,
     AVG_X,
     AVG_Y,
@@ -31,7 +32,9 @@ var NUM_FIREFLIES,
     CANVAS_CIRCLES_SIZE = 350,
     MID_CNV_SZ = CANVAS_CIRCLES_SIZE/2;
 
-var _resetConstants = function(){
+const OMEGA_0 = 1;
+
+var _resetConstants = function () {
 	var area = window.innerWidth * window.innerHeight;
 	NUM_FIREFLIES = Math.round(area * (150)/(1280*600)); // 150 fireflies per 1280x600
 	if(NUM_FIREFLIES<100) NUM_FIREFLIES=100; // actually, MINUMUM 100
@@ -45,6 +48,7 @@ var _resetConstants = function(){
 	FLY_SYNC = false;
 	MOUSE_RADIUS = 200;
     FIXED = false;
+    RANDOM_OMEGA = false,
     OBSERVE_ALL = false;
     AVG_X = 0;
     AVG_Y = 0;
@@ -299,6 +303,10 @@ function Firefly(){
 	// Mouse LAST pressed... a little decay...
 	var _chaos = 0;
 
+    self.getOmega = function () {
+        return RANDOM_OMEGA ? self.omega : OMEGA_0;
+    }
+
 	// Update
 	self.update = function(delta){
 
@@ -335,7 +343,7 @@ function Firefly(){
 		}
 		_chaos *= 0.8;
 
-        self.dtheta = FLY_CLOCK_SPEED*self.omega/60;
+        self.dtheta = FLY_CLOCK_SPEED*self.getOmega()/60;
         if(FLY_SYNC){
             let mcos = 0, msin=0, n=0;
             for(var i=0;i<fireflies.length;i++){
@@ -350,7 +358,7 @@ function Firefly(){
             if (n>0){
                 mcos = mcos/n
                 msin = msin/n
-                self.dtheta = FLY_CLOCK_SPEED*(self.omega + FLY_PULL*(Math.cos(self.theta)*msin - Math.sin(self.theta)*mcos))/60;
+                self.dtheta = FLY_CLOCK_SPEED*(self.getOmega() + FLY_PULL*(Math.cos(self.theta)*msin - Math.sin(self.theta)*mcos))/60;
             }
         }
         self.theta += self.dtheta;
@@ -420,6 +428,7 @@ var _syncConstants = function(){
 	publish("toggle/neighborNudgeRule", [FLY_SYNC]);
     publish("toggle/observeAllNeighbors", [OBSERVE_ALL])
 	publish("slider/nudgeAmount", [FLY_PULL]);
+    publish("slider/toggleRandomOmega", [RANDOM_OMEGA]);
 	publish("slider/neighborRadius", [FLY_RADIUS]);
 
 };
@@ -447,6 +456,9 @@ subscribe("toggle/toggleMotion", function(value){
 
 subscribe("toggle/observeAllNeighbors", function(value){
 	OBSERVE_ALL = value;
+});
+subscribe("toggle/toggleRandomOmega", function (value) {
+    RANDOM_OMEGA = value;
 });
 
 // Internal Clock
