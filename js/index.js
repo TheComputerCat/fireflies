@@ -92,7 +92,6 @@ window.onload = async function(){
 		// Add fireflies!
 		_addFireflies(NUM_FIREFLIES);
         drawAxes()
-        addCircles();
         addAvgCircle();
 		// Animation loop
 		app.ticker.add(function(delta){
@@ -185,30 +184,47 @@ function updateCircles() {
     }
 }
 
-function removeCircles(canvasCircles){
+function removeCircles(j) {
     for (let i = 0; i < circles.length; i++) {
+        if (circles[i].id == j) {
         canvasCircles.stage.removeChild(circles[i].circle);
+            circles.splice(i, 1);
+            return;
+        }
     }
-    circles=[];
 }
 
 var _addFireflies = function(num){
-    removeCircles(canvasCircles);
     for(var i=0; i<num; i++){
 		var ff = new Firefly();
 		fireflies.push(ff);
 		app.stage.addChild(ff.graphics);
-	}
-    addCircles();
+
+        if (fireflies.length < 25 || Math.random() < 0.1) {
+            const circle = new PIXI.Graphics();
+            updateCircle(ff, circle);
+            circles.push({ circle: circle, id: fireflies.length - 1 });
+            canvasCircles.stage.addChild(circle);
+        }
+    }
 };
 
-var _removeFireflies = function(num){
-    removeCircles(canvasCircles);
-	for(var i=0; i<num; i++){
+function updateCircle(firefly, circle) {
+    circle.beginFill(numberToColor(firefly.omega));
+    circle.lineStyle(1, 0x000000);
+    circle.drawCircle(MID_CNV_SZ, MID_CNV_SZ, 10);
+    circle.endFill();
+    coordinates = polarToCartesian(150, firefly.theta);
+    circle.x = coordinates.x;
+    circle.y = coordinates.y;
+}
+
+var _removeFireflies = function (num) {
+    for (var i = 0; i < num; i++) {
+        removeCircles(fireflies.length - 1);
 		var ff = fireflies.pop();
 		app.stage.removeChild(ff.graphics);
 	}
-    addCircles();
 };
 
 var _resetFireflies = function(){
