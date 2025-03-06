@@ -425,7 +425,7 @@ function Firefly(){
 
 }
 
-function dumpSimulation(autoToggle){
+function dumpSimulation(){
     const jsonStr = JSON.stringify(simulation, null, 2);
     const blob = new Blob([jsonStr], { type: "application/json" });
     const url = URL.createObjectURL(blob);
