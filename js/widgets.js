@@ -249,7 +249,6 @@ Widgets.slider = function(config){
 
 		// Publish value
 		publish("slider/"+config.id, [x]);
-        console.log(x)
         top_label.innerHTML = `${top_label_text} ${Number(x.toFixed(3))}`;
 
 	};
@@ -264,7 +263,6 @@ Widgets.slider = function(config){
 		var x = (value-min)/(max-min); // 0 to 1
 		var left = x*sliderWidth;
 		slider_knob.style.left = left;
-        console.log(value)
         top_label.innerHTML = `${top_label_text} ${Number(value.toFixed(3))}`;
 	};
 	subscribe("slider/"+config.id, self.onChangeValue);
