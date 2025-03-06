@@ -557,12 +557,15 @@ subscribe("slider/neighborRadius", function(value){
 });
 
 subscribe("toggle/toggleRecord", function(value){
-    const element = document.getElementById("ticks");
+    const ticks = document.getElementById("ticks");
+    const dumpButton = document.getElementById("dumpSimulation");
     if (value) {
         resetSimulation();
-        element.style.display = "block";
+        ticks.style.display = "block";
+        dumpButton.removeAttribute("inactive");
     } else {
-        element.style.display = "none";
+        ticks.style.display = "none";
+        dumpButton.setAttribute("inactive","yes");
     }
     RECORD = value;
 });
