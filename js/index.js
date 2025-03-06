@@ -49,9 +49,9 @@ var _resetConstants = function () {
 	FLY_SYNC = false;
 	MOUSE_RADIUS = 200;
     FIXED = false;
-    RANDOM_OMEGA = false,
+    RANDOM_OMEGA = false;
     OBSERVE_ALL = false;
-    COLOR = true,
+    COLOR = true;
     AVG_X = 0;
     AVG_Y = 0;
     AVG_THETA = 0;
@@ -437,7 +437,7 @@ var _syncConstants = function(){
     publish("toggle/observeAllNeighbors", [OBSERVE_ALL])
 	publish("slider/nudgeAmount", [FLY_PULL]);
     publish("toggle/toggleColor", [COLOR]);
-    publish("slider/toggleRandomOmega", [RANDOM_OMEGA]);
+    publish("toggle/toggleRandomOmega", [RANDOM_OMEGA]);
 	publish("slider/neighborRadius", [FLY_RADIUS]);
 
 };
