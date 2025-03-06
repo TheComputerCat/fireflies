@@ -202,7 +202,6 @@ function removeCircles(j) {
 }
 
 var _addFireflies = function(num){
-    stopRecording();
     for(var i=0; i<num; i++){
         var ff = new Firefly();
 		fireflies.push(ff);
@@ -216,12 +215,6 @@ var _addFireflies = function(num){
         }
     }
 };
-
-function stopRecording() {
-    RECORD = false;
-    publish("toggle/toggleRecord", [RECORD]);
-    resetSimulation();
-}
 
 function resetSimulation() {
     simulation = {
@@ -241,7 +234,6 @@ function updateCircle(firefly, circle) {
 }
 
 var _removeFireflies = function (num) {
-    stopRecording();
     for (var i = 0; i < num; i++) {
         removeCircles(fireflies.length - 1);
 		var ff = fireflies.pop();
@@ -502,6 +494,7 @@ subscribe("slider/numFireflies", function(value){
 
 	// Then make that the new constant.
 	NUM_FIREFLIES = value;
+    resetSimulation();
 
 });
 
