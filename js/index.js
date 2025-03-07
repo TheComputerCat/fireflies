@@ -76,6 +76,7 @@ let radius_avg_circle;
 let axes;
 let simulation = {
     ticks: 0,
+    k: 0,
     data: []
 };
 window.onload = async function(){
@@ -220,6 +221,7 @@ var _addFireflies = function(num){
 function resetSimulation() {
     simulation = {
         ticks: 0,
+        k: FLY_CLOCK_SPEED*FLY_PULL,
         data: Array.from({ length: fireflies.length }, () => [])
     };
     document.getElementById("numTicks").innerText = simulation.ticks;
